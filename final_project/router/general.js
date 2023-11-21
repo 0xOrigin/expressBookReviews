@@ -3,6 +3,9 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
+
+const BASE_URL = 'PUT YOUR API GATEWAY URL HERE';
 
 
 public_users.post("/register", (req, res) => {
@@ -95,5 +98,51 @@ public_users.get('/review/:isbn', function (req, res) {
     return res.status(404).json(err);
   });
 });
+
+
+// Axios calls to the API Gateway
+
+public_users.get('/', async function (req, res) {
+  try {
+    const response = await axios.get(`${BASE_URL}/`);
+    res.status(200).json(response.data);
+  } catch(error) {
+    res.status(500).json({ message: "Error fetching books", error: error.message });
+  }
+});
+
+public_users.get('/isbn/:isbn', function (req, res) {
+  isbn = req.params.isbn;
+  axios.get(`${BASE_URL}/isbn/${isbn}`)
+  .then(response => {
+    res.status(200).json(response.data);
+  })
+  .catch(error => {
+    res.status(404).json({ message: "Book not found", error: error.message });
+  });
+});
+
+public_users.get('/author/:author', function (req, res) {
+  author = req.params.author;
+  axios.get(`${BASE_URL}/author/${author}`)
+  .then(response => {
+    res.status(200).json(response.data);
+  })
+  .catch(error => {
+    res.status(404).json({ message: "Book not found", error: error.message });
+  });
+});
+
+public_users.get('/title/:title', function (req, res) {
+  title = req.params.title;
+  axios.get(`${BASE_URL}/title/${title}`)
+  .then(response => {
+    res.status(200).json(response.data);
+  })
+  .catch(error => {
+    res.status(404).json({ message: "Book not found", error: error.message });
+  });
+});
+
 
 module.exports.general = public_users;
