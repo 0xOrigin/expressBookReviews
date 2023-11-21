@@ -59,7 +59,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     return res.status(404).json({ message: `ISBN ${isbn} not found` });
 
   delete book.reviews[username];
-  return res.status(200).send("Review deleted successfully");
+  return res.status(204).send("Review deleted successfully");
 });
 
 
